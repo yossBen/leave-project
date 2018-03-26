@@ -2,6 +2,7 @@
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {AlertService, AuthenticationService} from '../_services/index';
+import {Utils} from '../_utils/Utils';
 
 @Component({
   moduleId: module.id.toString(),
@@ -39,14 +40,16 @@ export class LoginComponent implements OnInit {
           }
         },
         error => {
-          let message;
-          if (error.status === 400) {
-            message = 'Email ou mots de passe sont incorrectes';
-          } else {
-            message = error.error.message;
+          const err = Utils.getCustomError(error);
+          if (err && err.devStatus === '#400-2') {
+            this.alertService.error('Email ou mots de passe sont incorrectes');
           }
-          this.alertService.error(message);
-          this.loading = false;
-        });
+        },
+        () => {
+          this.loading = true;
+        }
+      );
+
+
   }
 }
