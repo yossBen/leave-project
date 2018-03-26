@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="leave-back:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="leave-back-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="leave-back:war exploded" />
+    </root>
+  </artifact>
+</component>
