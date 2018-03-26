@@ -1,0 +1,24 @@
+*.iml
+# Maven #
+target/
+
+# Eclipse #
+.settings/
+.project
+.classpath
+
+bin/
+
+# Idea #
+.idea
+*.iml
+out
+
+# Package Files #
+*.class
+*.jar
+*.war
+*.ear
+
+#Nodes Modules
+node_modules
