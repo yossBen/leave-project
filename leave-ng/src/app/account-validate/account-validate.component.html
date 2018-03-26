@@ -1,3 +1,14 @@
-<p>
-  account-validate works!
-</p>
+<h1>Confirmation de votre e-mail</h1>
+
+<div *ngIf="validate" class="help-block">
+  <p>
+    Votre adresse e-mail a été confirmée. <a [routerLink]="['/login']" class="btn btn-link">Veuillez vous connecter</a>
+  </p>
+</div>
+
+<div *ngIf="!validate" >
+   <p>
+    Désolé : Le lien de confirmation n'est plus valide. Vérifiez vos e-mails et utilisez le lien le plus récent pour
+    confirmer votre adresse électronique.
+  </p>
+</div>

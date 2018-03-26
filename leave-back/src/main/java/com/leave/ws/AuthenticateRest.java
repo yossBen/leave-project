@@ -3,6 +3,7 @@ package com.leave.ws;
 import com.leave.entity.User;
 import com.leave.service.JwtService;
 import com.leave.service.UserService;
+import com.leave.utils.CustomStatus;
 import com.leave.ws.exception.RestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @RestController
@@ -33,7 +32,7 @@ public class AuthenticateRest {
             return new ResponseEntity<User>(user, HttpStatus.OK);
         }
 
-        throw new RestException("Email ou mot de passe sont incorrectes ", HttpStatus.BAD_REQUEST);
+        throw new RestException("Email ou mot de passe sont incorrectes ", HttpStatus.BAD_REQUEST, CustomStatus.ERROR_LOGIN);
     }
 
     @RequestMapping(value = "/validate", method = RequestMethod.POST)
@@ -41,7 +40,8 @@ public class AuthenticateRest {
         boolean validate = userService.validateAccount(token);
         if (validate) {
             return "{\"validate\":true}";
-        } else {
+        }
+        else {
             return "{\"validate\":false}";
         }
     }

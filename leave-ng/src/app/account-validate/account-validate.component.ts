@@ -22,10 +22,8 @@ export class AccountValidateComponent implements OnInit {
         .subscribe(
           data => {
             if (data.validate) {
-              this.alertService.success('Account Validate');
               this.validate = true;
             } else {
-              this.alertService.error('Account InValidate');
               this.validate = false;
             }
           },

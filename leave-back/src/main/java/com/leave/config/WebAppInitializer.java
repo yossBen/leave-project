@@ -5,23 +5,23 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.Filter;
 
 public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-    @Override
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { com.leave.config.AppConfig.class };
-    }
+	@Override
+	protected Class<?>[] getRootConfigClasses() {
+		return new Class[] { com.leave.config.AppConfig.class };
+	}
 
-    @Override
-    protected Class<?>[] getServletConfigClasses() {
-        return null;
-    }
+	@Override
+	protected Class<?>[] getServletConfigClasses() {
+		return null;
+	}
 
-    @Override
-    protected String[] getServletMappings() {
-        return new String[] { "/" };
-    }
+	@Override
+	protected String[] getServletMappings() {
+		return new String[] { "/" };
+	}
 
-    @Override
-    protected Filter[] getServletFilters() {
-        return new Filter[] { /* new OpenEntityManagerInViewFilter() */ };
-    }
+	@Override
+	protected Filter[] getServletFilters() {
+		return new Filter[] {};
+	}
 }

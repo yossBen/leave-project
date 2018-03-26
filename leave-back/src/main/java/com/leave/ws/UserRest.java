@@ -3,6 +3,7 @@ package com.leave.ws;
 import com.leave.entity.User;
 import com.leave.service.JwtService;
 import com.leave.service.UserService;
+import com.leave.utils.CustomStatus;
 import com.leave.ws.exception.RestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,9 +38,8 @@ public class UserRest {
     public void create(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String password, @RequestParam String email) throws RestException {
         if (userService.isExist(email)) {
             LOGGER.log(Level.SEVERE, "Unable to create. A User with name " + email + " already exist.");
-            throw new RestException("Unable to create. A User with name " + email + " already exist.", HttpStatus.BAD_REQUEST);
+            throw new RestException("Unable to create. A User with name " + email + " already exist.", HttpStatus.BAD_REQUEST, CustomStatus.ACCOUNT_EXIST);
         }
-
         userService.create(firstname, lastname, password, email);
     }
 }

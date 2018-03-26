@@ -1,5 +1,6 @@
 package com.leave.ws.exception;
 
+import com.leave.utils.CustomStatus;
 import org.springframework.http.HttpStatus;
 
 public class RestException extends Exception {
@@ -9,10 +10,12 @@ public class RestException extends Exception {
     private static final long serialVersionUID = 1L;
     private HttpStatus status;
     private String message;
+    private String devStatus;
 
-    public RestException(String message, HttpStatus status) {
+    public RestException(String message, HttpStatus status, CustomStatus customStatus) {
         super();
         this.message = message;
+        this.devStatus = customStatus != null ? customStatus.getStatus() : null;
         this.status = status != null ? status : HttpStatus.OK;
     }
 
@@ -25,23 +28,25 @@ public class RestException extends Exception {
     }
 
     public RestError geRestError() {
-        return new RestError(message);
+        return new RestError(message, devStatus);
     }
 
     public static class RestError {
         private String message;
+        private String devStatus;
 
-        public RestError(String message) {
+        public RestError(String message, String devStatus) {
             super();
             this.message = message;
+            this.devStatus = devStatus;
         }
 
         public String getMessage() {
             return message;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public String getDevStatus() {
+            return devStatus;
         }
     }
 }

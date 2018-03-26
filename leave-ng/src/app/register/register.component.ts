@@ -2,6 +2,7 @@
 import {Router} from '@angular/router';
 
 import {AlertService, UserService} from '../_services/index';
+import {Utils} from '../_utils/Utils';
 
 @Component({
   moduleId: module.id.toString(),
@@ -26,8 +27,14 @@ export class RegisterComponent {
           this.router.navigate(['/login']);
         },
         error => {
-          this.alertService.error(error.error.message);
-          this.loading = false;
+          let err = Utils.getCustomError(error);
+          if (err && err.devStatus == "#400-1") {
+            this.alertService.error("Un compte existe déjà pour cette adresse email");
+          }
+          console.log(error.message);
+        },
+        () => {
+          this.loading = true;
         });
   }
 }

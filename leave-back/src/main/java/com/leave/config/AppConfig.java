@@ -38,97 +38,89 @@ import java.util.Properties;
 @EnableSwagger2
 @ComponentScan(AppConfig.PACKAGE)
 public class AppConfig implements WebMvcConfigurer {
-    public final static String PACKAGE = "com.leave";
-    public final static String PACKAGE_ENTITY = PACKAGE + ".entity";
+	public final static String PACKAGE = "com.leave";
+	public final static String PACKAGE_ENTITY = PACKAGE + ".entity";
 
-    @Bean
-    public Docket api() {
-        // .apis(RequestHandlerSelectors.basePackage("guru.springframework.controllers"))
-        // .paths(regex("/product.*"))
-        return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
-    }
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
+	}
 
-    @Bean
-    SecurityConfiguration security() {
-        return new SecurityConfiguration(null, null, null, null, "Bearer " + jwtService.generateJWT("SWAGGER", new Long(1), 0), ApiKeyVehicle.HEADER, "Authorization", ",");
-    }
+	@Bean
+	SecurityConfiguration security() {
+		return new SecurityConfiguration(null, null, null, null, "Bearer " + jwtService.generateJWT("SWAGGER", new Long(1), 0), ApiKeyVehicle.HEADER, "Authorization", ",");
+	}
 
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // registry.addResourceHandler("/springfox-swagger-ui/**").addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/");
-        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
 
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
+		registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+	}
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*");
-    }
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**").allowedOrigins("*");
+	}
 
-    @Autowired
-    private Environment env;
+	@Autowired
+	private Environment env;
 
-    @Autowired
-    private JwtService jwtService;
+	@Autowired
+	private JwtService jwtService;
 
-    @Bean
-    public HibernateTemplate hibernateTemplate() throws IOException {
-        return new HibernateTemplate(getSessionFactory());
-    }
+	@Bean
+	public HibernateTemplate hibernateTemplate() throws IOException {
+		return new HibernateTemplate(getSessionFactory());
+	}
 
-    @Bean(name = "sessionFactory")
-    public SessionFactory getSessionFactory() throws IOException {
-        LocalSessionFactoryBean lsfb = new LocalSessionFactoryBean();
-        lsfb.setDataSource(getDataSource());
-        lsfb.setPackagesToScan(PACKAGE_ENTITY);
-        lsfb.setHibernateProperties(hibernateProperties());
-        lsfb.afterPropertiesSet();
-        return lsfb.getObject();
-    }
+	@Bean(name = "sessionFactory")
+	public SessionFactory getSessionFactory() throws IOException {
+		LocalSessionFactoryBean lsfb = new LocalSessionFactoryBean();
+		lsfb.setDataSource(getDataSource());
+		lsfb.setPackagesToScan(PACKAGE_ENTITY);
+		lsfb.setHibernateProperties(hibernateProperties());
+		lsfb.afterPropertiesSet();
+		return lsfb.getObject();
+	}
 
-    @Bean
-    public DataSource getDataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(env.getProperty("db.driver"));
-        dataSource.setUrl(env.getProperty("db.url"));
-        dataSource.setUsername(env.getProperty("db.username"));
-        dataSource.setPassword(env.getProperty("db.password"));
-        return dataSource;
-    }
+	@Bean
+	public DataSource getDataSource() {
+		BasicDataSource dataSource = new BasicDataSource();
+		dataSource.setDriverClassName(env.getProperty("db.driver"));
+		dataSource.setUrl(env.getProperty("db.url"));
+		dataSource.setUsername(env.getProperty("db.username"));
+		dataSource.setPassword(env.getProperty("db.password"));
+		return dataSource;
+	}
 
-    @Bean
-    public HibernateTransactionManager hibernateTransactionManager() throws IOException {
-        return new HibernateTransactionManager(getSessionFactory());
-    }
+	@Bean
+	public HibernateTransactionManager hibernateTransactionManager() throws IOException {
+		return new HibernateTransactionManager(getSessionFactory());
+	}
 
-    private Properties hibernateProperties() {
-        Properties props = new Properties();
-        props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-        props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        return props;
-    }
+	private Properties hibernateProperties() {
+		Properties props = new Properties();
+		props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+		props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
+		return props;
+	}
 
-    @Bean
-    public JavaMailSender getMailSender(){
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+	@Bean
+	public JavaMailSender getMailSender() {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
-        //Using gmail
-        mailSender.setHost(env.getProperty("smtp.mail.host"));
-        mailSender.setPort(Integer.parseInt(env.getProperty("smtp.mail.port")));
-/*
-        mailSender.setUsername("Your-gmail-id");
-        mailSender.setPassword("Your-gmail-password");
-*/
-        Properties props = new Properties();
-        mailSender.setJavaMailProperties(props);
-         props.put("mail.smtp.auth", "false");
+		// Using gmail
+		mailSender.setHost(env.getProperty("smtp.mail.host"));
+		mailSender.setPort(Integer.parseInt(env.getProperty("smtp.mail.port")));
+		/*
+		 * mailSender.setUsername("Your-gmail-id");
+		 * mailSender.setPassword("Your-gmail-password");
+		 */
+		Properties props = new Properties();
+		mailSender.setJavaMailProperties(props);
+		props.put("mail.smtp.auth", "false");
 
-/*
-        javaMailProperties.put("mail.smtp.starttls.enable", "true");
-        javaMailProperties.put("mail.transport.protocol", "smtp");
-        javaMailProperties.put("mail.debug", "true");//Prints out everything on screen
-*/
-        return mailSender;
-    }
+		return mailSender;
+	}
 }
