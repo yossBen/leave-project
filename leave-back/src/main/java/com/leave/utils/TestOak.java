@@ -18,13 +18,20 @@ public class TestOak {
 	public static void main(String[] args) throws UnknownHostException, LoginException, RepositoryException {
 		String uri = "mongodb://localhost:27017";
 		DocumentNodeStore ns = new MongoDocumentNodeStoreBuilder().setMongoDB(uri, "oak-last-version", 16).build();
+		System.out.println("connexion");
+
 		Repository repo = new Jcr(new Oak(ns)).createRepository();
-		
+
+		System.out.println("Creation REPO");
+
 		Session session = repo.login(new SimpleCredentials("admin", "admin".toCharArray()));
 		Node parentNode = session.getRootNode();
-		Node childNode = parentNode.addNode("childNodeName");
-		childNode.setProperty("propertyName", "propertyValue");
-		
+//		Node node = session.getNode(parentNode.getPath() + "test");
+		// Node parentNode = session.getRootNode();
+		Node childNode = parentNode.addNode("test2");
+		childNode.setProperty("ville", "Argenteuil");
+
+		session.save();
 		System.out.println("FIN");
 	}
 }
